@@ -32,7 +32,7 @@ module.exports = {
     },
 
     // 输出文件目录
-    outputDir: '../dfjinxin-fast/src/main/resources/static/',
+    outputDir: './dist',
     assetsDir: 'assets', // 静态资源目录 (js, css, img, fonts)
 
     // alias 配置
