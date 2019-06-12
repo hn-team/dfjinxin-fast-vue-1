@@ -7,6 +7,16 @@
       <el-form-item label="用户名" prop="userName">
         <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
       </el-form-item>
+      <el-form-item label="租户名" prop="tenantId">
+        <el-select v-model="dataForm.tenantId" placeholder="请选择租户">
+          <el-option
+                  v-for="item in tenants"
+                  :key="item.id"
+                  :label="item.tenantName"
+                  :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
         <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
       </el-form-item>
@@ -75,9 +85,11 @@
       return {
         visible: false,
         roleList: [],
+        tenants:[],
         dataForm: {
           id: 0,
           userName: '',
+          tenantId: '',
           password: '',
           comfirmPassword: '',
           salt: '',
@@ -89,6 +101,9 @@
         dataRule: {
           userName: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
+          ],
+          tenantId: [
+            { required: true, message: '租户名不能为空', trigger: 'blur' }
           ],
           password: [
             { validator: validatePassword, trigger: 'blur' }
@@ -107,7 +122,23 @@
         }
       }
     },
+    activated () {
+      this.queryTenants()
+    },
     methods: {
+      queryTenants(){
+        this.$http({
+          url: this.$http.adornUrl('/sys/usertenant/queryAll'),
+          method: 'post'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.tenants = data.data
+            console.log(this.tenants)
+          } else {
+            this.$message.error("获取租户列表异常！")
+          }
+        })
+      },
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
@@ -150,6 +181,7 @@
               data: this.$http.adornData({
                 'userId': this.dataForm.id || undefined,
                 'username': this.dataForm.userName,
+                'tenantId': this.dataForm.tenantId,
                 'password': this.dataForm.password,
                 'salt': this.dataForm.salt,
                 'email': this.dataForm.email,
