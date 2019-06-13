@@ -122,7 +122,7 @@
         }
       }
     },
-    activated () {
+    created () {
       this.queryTenants()
     },
     methods: {
@@ -161,6 +161,7 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.userName = data.user.username
+                this.dataForm.tenantId = data.user.tenantId
                 this.dataForm.salt = data.user.salt
                 this.dataForm.email = data.user.email
                 this.dataForm.mobile = data.user.mobile
