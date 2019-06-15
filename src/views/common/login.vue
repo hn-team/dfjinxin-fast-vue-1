@@ -63,6 +63,7 @@
         },
         created () {
             // this.getCaptcha()
+          this.$router.replace({ name: 'home' })
         },
         methods: {
             // 提交表单
